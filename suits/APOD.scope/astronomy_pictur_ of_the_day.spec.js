@@ -1,12 +1,13 @@
 "use strict";
 
 const fetch = require('node-fetch')
-const d = require("../../defaults");
-const u = require("../../utils");
+const defaults = require("../../config/defaults");
+const utils = require("../../libForTesting/utils");
+const validate = require("../../libForTesting/ajvValidator");
 
 let responseJson;
 
-jest.setTimeout(d.jestTimeout); // it is necessary to increase timeout, because default timeout in Jest 5000ms
+jest.setTimeout(defaults.jestTimeout); // it is necessary to increase timeout, because default timeout in Jest 5000ms
 
 describe("Integration REST-API Testing APOD", () => {
 
@@ -14,8 +15,8 @@ describe("Integration REST-API Testing APOD", () => {
 
         const response = await fetch("https://api.nasa.gov/planetary/apod?api_key=vidkL09R9ihkBAcesBGRgQtwiJkSfXQcToZi1aov");
 
-        u.checkStatusCode200(response.status);
-        responseJson = await u.transformResponseToJson(response);
+        utils.checkStatusCode200(response.status);
+        responseJson = await utils.transformResponseToJson(response);
 
 
         console.log(responseJson)
