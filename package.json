@@ -1,0 +1,28 @@
+{
+  "name": "rest-api-test-nasa",
+  "version": "1.0.0",
+  "description": "All what you need to test NASA API",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest -i --verbose"
+  },
+  "keywords": [
+    "REST-API",
+    "Jest",
+    "Fetch",
+    "Integration Test",
+    "QA Automation"
+  ],
+  "author": "Alexander Shulga",
+  "license": "ISC",
+  "devDependencies": {
+    "ajv": "^6.12.2",
+    "got": "^11.1.2",
+    "jest": "^26.0.1"
+  },
+  "dependencies": {
+    "fetch": "^1.1.0",
+    "lodash": "^4.17.15",
+    "node-fetch": "^2.6.0"
+  }
+}
