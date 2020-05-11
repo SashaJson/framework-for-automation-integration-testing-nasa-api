@@ -10,7 +10,7 @@ const checkStatusCode = require("../../Libs/checkStatusCode")
 
 const dateFormat = "YYYY-MM-DD";
 const currentlyDate = utils.getCurrentlyDate();
-let todaysDate = moment().format(dateFormat);
+const todaysDate = moment().format(dateFormat);
 
 const invalidDate = "1919-03-06";
 const minimalDate = "1995-06-16";
