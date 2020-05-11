@@ -9,8 +9,13 @@ const validate = require("../../Libs/ajvValidator");
 const checkStatusCode = require("../../Libs/checkStatusCode")
 
 const dateFormat = "YYYY-MM-DD";
-let todaysDate = moment().format(dateFormat);
 const currentlyDate = utils.getCurrentlyDate();
+let todaysDate = moment().format(dateFormat);
+
+const invalidDate = "1919-03-06";
+const minimalDate = "1995-06-16";
+const minDateMinus1 = "1995-06-15";
+const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
 
 let responseJson;
 
@@ -49,11 +54,9 @@ describe("Integration REST-API Testing APOD", () => {
         expect(responseJson.media_type).toBe("image")
     });
 
-    it("1. Make GET request with query parameter 'date=1919-03-06' to endpoint apod and expect 'Error'", async () => {
+    it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
 
-        const date = "1919-03-06";
-
-        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${date}`);
+        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${invalidDate}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
         responseJson = await utils.transformResponseToJson(response);
@@ -76,11 +79,9 @@ describe("Integration REST-API Testing APOD", () => {
         expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
     });
 
-    it("2. Make GET request with query parameter minimal 'date=1995-06-16' to endpoint apod", async () => {
+    it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
 
-        const date = "1995-06-16";
-
-        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${date}`);
+        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${minimalDate}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
         responseJson = await utils.transformResponseToJson(response);
@@ -110,9 +111,7 @@ describe("Integration REST-API Testing APOD", () => {
 
     });
 
-    it("3. Make GET request with query parameter min date - 1 'date=1995-06-15' to endpoint apod", async () => {
-
-        const minDateMinus1 = "1995-06-15";
+    it(`3. Make GET request with query parameter min date - 1 'date=${minDateMinus1}' to endpoint apod`, async () => {
 
         const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
         utils.checkAllResponse(response);
@@ -168,9 +167,7 @@ describe("Integration REST-API Testing APOD", () => {
         expect(responseJson.media_type).toBe("image")
     });
 
-    it("5. Make GET request with query parameter max date + 1 'date=2020-05-11' to endpoint apod", async () => {
-
-        const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
+    it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
 
         const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
         utils.checkAllResponse(response);
