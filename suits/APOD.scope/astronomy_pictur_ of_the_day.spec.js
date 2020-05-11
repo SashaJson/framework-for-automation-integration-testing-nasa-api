@@ -18,6 +18,7 @@ const minDateMinus1 = "1995-06-15";
 const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
 
 let responseJson;
+let errMessInDate;
 
 jest.setTimeout(defaults.jestTimeout); // it is necessary to increase timeout, because default timeout in Jest 5000ms
 
@@ -133,7 +134,9 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+        expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
+
+        errMessInDate = responseJson.msg.slice(0, 37)
     });
 
     it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
@@ -175,6 +178,7 @@ describe("Integration REST-API Testing APOD", () => {
         responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
+
             "allOf": [
                 {
                     "$ref": "apod.json#"
@@ -189,7 +193,7 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+        expect(responseJson.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
 
     });
 
