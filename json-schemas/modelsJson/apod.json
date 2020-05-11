@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "apod.json",
+  "type": "object",
+  "properties": {
+    "copyright": {
+      "$ref": "definitions.json#/definitions/copyright"
+    },
+    "date": {
+      "$ref": "definitions.json#/definitions/date"
+    },
+    "explanation": {
+      "$ref": "definitions.json#/definitions/explanation"
+    },
+    "hdurl": {
+      "$ref": "definitions.json#/definitions/hdurl"
+    },
+    "media_type": {
+      "$ref": "definitions.json#/definitions/media_type"
+    },
+    "service_version": {
+      "$ref": "definitions.json#/definitions/service_version"
+    },
+    "title": {
+      "$ref": "definitions.json#/definitions/title"
+    },
+    "url": {
+      "$ref": "definitions.json#/definitions/url"
+    },
+    "code": {
+      "$ref": "definitions.json#/definitions/code"
+    },
+    "msg": {
+      "$ref": "definitions.json#/definitions/msg"
+    }
+  }
+}

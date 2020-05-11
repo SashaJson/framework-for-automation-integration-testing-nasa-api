@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "definitions.json",
+  "definitions": {
+    "copyright": {
+      "type": "string",
+      "trim": true
+    },
+    "date": {
+      "type": "string",
+      "trim": true,
+      "format": "date"
+    },
+    "explanation": {
+      "type": "string",
+      "trim": true
+    },
+    "hdurl": {
+      "type": "string",
+      "trim": true
+    },
+    "media_type": {
+      "type": "string",
+      "trim": true
+    },
+    "service_version": {
+      "type": "string",
+      "trim": true
+    },
+    "title": {
+      "type": "string",
+      "trim": true
+    },
+    "url": {
+      "type": "string",
+      "trim": true,
+      "format": "uri"
+    },
+    "code": {
+      "type": "number",
+      "trim": true
+    },
+    "msg": {
+      "type": "string",
+      "trim": true
+    }
+  }
+}

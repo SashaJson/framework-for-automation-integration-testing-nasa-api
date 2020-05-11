@@ -17,8 +17,8 @@
   "license": "ISC",
   "devDependencies": {
     "ajv": "^6.12.2",
-    "got": "^11.1.2",
-    "jest": "^26.0.1"
+    "jest": "^26.0.1",
+    "moment": "^2.25.3"
   },
   "dependencies": {
     "fetch": "^1.1.0",
