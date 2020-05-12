@@ -26,10 +26,9 @@ describe("Integration REST-API Testing APOD", () => {
     it("0. Make GET request with default query parameter to endpoint apod and received correct date", async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -50,17 +49,16 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.date).toBe(todaysDate);
-        expect(responseJson.media_type).toBe("image")
+        expect(responseJSON.date).toBe(todaysDate);
+        expect(responseJSON.media_type).toBe("image")
     });
 
     it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -76,16 +74,15 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+        expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
     });
 
     it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -106,18 +103,17 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.date).toBe(date);
-        expect(responseJson.media_type).toBe("image")
+        expect(responseJSON.date).toBe(date);
+        expect(responseJSON.media_type).toBe("image")
 
     });
 
     it(`3. Make GET request with query parameter min date - 1 'date=${minDateMinus1}' to endpoint apod`, async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -133,18 +129,17 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
+        expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
 
-        errMessInDate = responseJson.msg.slice(0, 37)
+        errMessInDate = responseJSON.msg.slice(0, 37)
     });
 
     it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -165,17 +160,16 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.date).toBe(todaysDate);
-        expect(responseJson.media_type).toBe("image")
+        expect(responseJSON.date).toBe(todaysDate);
+        expect(responseJSON.media_type).toBe("image")
     });
 
     it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
 
             "allOf": [
@@ -192,17 +186,16 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+        expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
 
     });
 
     it("6. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -223,17 +216,16 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.date).toBe(todaysDate);
-        expect(responseJson.media_type).toBe("image")
+        expect(responseJSON.date).toBe(todaysDate);
+        expect(responseJSON.media_type).toBe("image")
     });
 
     it("7. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
 
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
-        utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        const responseJson = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJson, {
+        const responseJSON = await utils.transformResponseToJson(response);
+        validate.validationCheckJsonSchema(responseJSON, {
             "type": "object",
             "allOf": [
                 {
@@ -254,8 +246,8 @@ describe("Integration REST-API Testing APOD", () => {
             ]
         });
 
-        expect(responseJson.date).toBe(todaysDate);
-        expect(responseJson.media_type).toBe("image")
+        expect(responseJSON.date).toBe(todaysDate);
+        expect(responseJSON.media_type).toBe("image")
     });
 
 })
