@@ -17,7 +17,6 @@ const minimalDate = "1995-06-16";
 const minDateMinus1 = "1995-06-15";
 const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
 
-let responseJson;
 let errMessInDate;
 
 jest.setTimeout(defaults.jestTimeout); // it is necessary to increase timeout, because default timeout in Jest 5000ms
@@ -29,7 +28,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -60,7 +59,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -85,7 +84,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -117,7 +116,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -144,7 +143,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -175,7 +174,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
         utils.checkAllResponse(response);
         checkStatusCode.Status400(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
 
@@ -202,7 +201,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
@@ -233,7 +232,7 @@ describe("Integration REST-API Testing APOD", () => {
         const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
         utils.checkAllResponse(response);
         checkStatusCode.Status200(response.status);
-        responseJson = await utils.transformResponseToJson(response);
+        const responseJson = await utils.transformResponseToJson(response);
         validate.validationCheckJsonSchema(responseJson, {
             "type": "object",
             "allOf": [
