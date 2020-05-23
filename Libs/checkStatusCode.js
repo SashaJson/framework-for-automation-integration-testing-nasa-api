@@ -16,4 +16,11 @@ module.exports = {
         }
     },
 
+    Status403: statusCode => {
+
+        if (statusCode !== 403) {
+            throw new Error("Ошибка HTTP: " + statusCode);
+        }
+    },
+
 }

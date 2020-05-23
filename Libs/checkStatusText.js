@@ -9,6 +9,10 @@ module.exports = {
 
     statusTextBadRequest: statusText => {
         if ( statusText !== 'BAD REQUEST') throw new Error("Ошибка HTTP: " + statusText);
+    },
+
+    statusTextForbidden: statusText => {
+        if ( statusText !== 'Forbidden') throw new Error("Ошибка HTTP: " + statusText);
     }
 
 }
