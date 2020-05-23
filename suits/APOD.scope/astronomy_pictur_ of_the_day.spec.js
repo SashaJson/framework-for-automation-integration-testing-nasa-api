@@ -6,7 +6,8 @@ const util = require("util");
 const defaults = require("../../config/defaults");
 const utils = require("../../Libs/utils");
 const validate = require("../../Libs/ajvValidator");
-const checkStatusCode = require("../../Libs/checkStatusCode")
+const checkStatusCode = require("../../Libs/checkStatusCode");
+const checkStatusText = require("../../Libs/checkStatusText");
 
 const dateFormat = "YYYY-MM-DD";
 const currentlyDate = utils.getCurrentlyDate();
@@ -23,231 +24,253 @@ jest.setTimeout(defaults.jestTimeout); // it is necessary to increase timeout, b
 
 describe("Integration REST-API Testing APOD", () => {
 
-    it("0. Make GET request with default query parameter to endpoint apod and received correct date", async () => {
+    describe("Testing query parameter 'date'", () => {
 
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}`);
-        checkStatusCode.Status200(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "copyright",
-                        "date",
-                        "explanation",
-                        "hdurl",
-                        "media_type",
-                        "service_version",
-                        "title",
-                        "url"
-                    ]
-                }
-            ]
+        it("0. Make GET request with default query parameter to endpoint apod and received correct date", async () => {
+
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "copyright",
+                            "date",
+                            "explanation",
+                            "hdurl",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ]
+                    }
+                ]
+            });
+
+            expect(responseJSON.date).toBe(todaysDate);
+            expect(responseJSON.media_type).toBe("image")
         });
 
-        expect(responseJSON.date).toBe(todaysDate);
-        expect(responseJSON.media_type).toBe("image")
-    });
+        it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
 
-    it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
+            checkStatusCode.Status400(response.status);
+            checkStatusText.statusTextBadRequest(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "code",
+                            "msg",
+                            "service_version"
+                        ]
+                    }
+                ]
+            });
 
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
-        checkStatusCode.Status400(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "code",
-                        "msg",
-                        "service_version"
-                    ]
-                }
-            ]
+            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
         });
 
-        expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
-    });
+        it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
 
-    it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "copyright",
+                            "date",
+                            "explanation",
+                            "hdurl",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ]
+                    }
+                ]
+            });
 
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
-        checkStatusCode.Status200(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "copyright",
-                        "date",
-                        "explanation",
-                        "hdurl",
-                        "media_type",
-                        "service_version",
-                        "title",
-                        "url"
-                    ]
-                }
-            ]
+            expect(responseJSON.date).toBe(date);
+            expect(responseJSON.media_type).toBe("image")
+
         });
 
-        expect(responseJSON.date).toBe(date);
-        expect(responseJSON.media_type).toBe("image")
+        it(`3. Make GET request with query parameter min date - 1 'date=${minDateMinus1}' to endpoint apod`, async () => {
 
-    });
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
+            checkStatusCode.Status400(response.status);
+            checkStatusText.statusTextBadRequest(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "code",
+                            "msg",
+                            "service_version"
+                        ]
+                    }
+                ]
+            });
 
-    it(`3. Make GET request with query parameter min date - 1 'date=${minDateMinus1}' to endpoint apod`, async () => {
+            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
 
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
-        checkStatusCode.Status400(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "code",
-                        "msg",
-                        "service_version"
-                    ]
-                }
-            ]
+            errMessInDate = responseJSON.msg.slice(0, 37)
         });
 
-        expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
+        it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
 
-        errMessInDate = responseJSON.msg.slice(0, 37)
-    });
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "copyright",
+                            "date",
+                            "explanation",
+                            "hdurl",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ]
+                    }
+                ]
+            });
 
-    it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
-
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
-        checkStatusCode.Status200(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "copyright",
-                        "date",
-                        "explanation",
-                        "hdurl",
-                        "media_type",
-                        "service_version",
-                        "title",
-                        "url"
-                    ]
-                }
-            ]
+            expect(responseJSON.date).toBe(todaysDate);
+            expect(responseJSON.media_type).toBe("image")
         });
 
-        expect(responseJSON.date).toBe(todaysDate);
-        expect(responseJSON.media_type).toBe("image")
-    });
+        it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
 
-    it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
+            checkStatusCode.Status400(response.status);
+            checkStatusText.statusTextBadRequest(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
 
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
-        checkStatusCode.Status400(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "code",
+                            "msg",
+                            "service_version"
+                        ]
+                    }
+                ]
+            });
 
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "code",
-                        "msg",
-                        "service_version"
-                    ]
-                }
-            ]
+            expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+
+        });
+    }); // describe (Testing query parameter 'date')
+
+    describe("Testing query parameter 'hd'", () => {
+
+        it("6. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
+
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "copyright",
+                            "date",
+                            "explanation",
+                            "hdurl",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ]
+                    }
+                ]
+            });
+
+            expect(responseJSON.date).toBe(todaysDate);
+            expect(responseJSON.media_type).toBe("image")
         });
 
-        expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+        it("7. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
 
-    });
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "copyright",
+                            "date",
+                            "explanation",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ],
+                        "not": {"required": ["hdurl"]}
+                    }
+                ]
+            });
 
-    it("6. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
-
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
-        checkStatusCode.Status200(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "copyright",
-                        "date",
-                        "explanation",
-                        "hdurl",
-                        "media_type",
-                        "service_version",
-                        "title",
-                        "url"
-                    ]
-                }
-            ]
+            expect(responseJSON.date).toBe(todaysDate);
+            expect(responseJSON.media_type).toBe("image")
         });
-
-        expect(responseJSON.date).toBe(todaysDate);
-        expect(responseJSON.media_type).toBe("image")
-    });
-
-    it("7. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
-
-        const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
-        checkStatusCode.Status200(response.status);
-        const responseJSON = await utils.transformResponseToJson(response);
-        validate.validationCheckJsonSchema(responseJSON, {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "apod.json#"
-                },
-                {
-                    "required": [
-                        "copyright",
-                        "date",
-                        "explanation",
-                        "media_type",
-                        "service_version",
-                        "title",
-                        "url"
-                    ],
-                    "not": {"required": ["hdurl"]}
-                }
-            ]
-        });
-
-        expect(responseJSON.date).toBe(todaysDate);
-        expect(responseJSON.media_type).toBe("image")
-    });
+    }); // describe (Testing query parameter 'hd')
 
 })
