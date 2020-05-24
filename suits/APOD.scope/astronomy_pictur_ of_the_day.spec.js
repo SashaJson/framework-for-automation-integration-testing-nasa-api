@@ -33,8 +33,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -64,8 +64,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -90,8 +90,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -122,8 +122,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -150,8 +150,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -181,8 +181,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -209,8 +209,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${randomValidDate}`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -245,8 +245,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -276,8 +276,8 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
-            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, {
                 "type": "object",
@@ -310,7 +310,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -319,7 +319,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?hd=true`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -328,7 +328,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?hd=false`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -337,7 +337,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?date=${currentlyDate}`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -346,7 +346,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?date=`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -355,7 +355,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?date=&hd=`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
@@ -364,7 +364,7 @@ describe("Integration REST-API Testing APOD", () => {
             const response = await fetch(`${defaults.urlAPOD}?hd=`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
-            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('content-type')).toBe(defaults.contentType);
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
