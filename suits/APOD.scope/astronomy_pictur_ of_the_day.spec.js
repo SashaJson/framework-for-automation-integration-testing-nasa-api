@@ -9,6 +9,7 @@ const validate = require("../../Libs/ajvValidator");
 const checkStatusCode = require("../../Libs/checkStatusCode");
 const checkStatusText = require("../../Libs/checkStatusText");
 const missApiKey = require("../../Libs/funcApiKeyMissing");
+const ranValidDate = require("../../Libs/getRandomDate");
 
 const dateFormat = "YYYY-MM-DD";
 const currentlyDate = utils.getCurrentlyDate();
@@ -18,6 +19,7 @@ const invalidDate = "1919-03-06";
 const minimalDate = "1995-06-16";
 const minDateMinus1 = "1995-06-15";
 const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
+const randomValidDate = ranValidDate.randomValidDate();
 
 let errMessInDate;
 
@@ -42,7 +44,6 @@ describe("Integration REST-API Testing APOD", () => {
                     },
                     {
                         "required": [
-                            "copyright",
                             "date",
                             "explanation",
                             "hdurl",
@@ -100,7 +101,6 @@ describe("Integration REST-API Testing APOD", () => {
                     },
                     {
                         "required": [
-                            "copyright",
                             "date",
                             "explanation",
                             "hdurl",
@@ -113,7 +113,7 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.date).toBe(date);
+            expect(responseJSON.date).toBe(minimalDate);
             expect(responseJSON.media_type).toBe("image")
 
         });
@@ -161,7 +161,6 @@ describe("Integration REST-API Testing APOD", () => {
                     },
                     {
                         "required": [
-                            "copyright",
                             "date",
                             "explanation",
                             "hdurl",
@@ -205,11 +204,44 @@ describe("Integration REST-API Testing APOD", () => {
             expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
 
         });
+
+        it(`6. Make GET request with query parameter random valid date 'date=${randomValidDate}' to endpoint apod`, async () => {
+            const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&date=${randomValidDate}`);
+            checkStatusCode.Status200(response.status);
+            checkStatusText.statusTextOk(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            expect(response.headers.get('x-ratelimit-limit')).toBe('2000');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, {
+                "type": "object",
+
+                "allOf": [
+                    {
+                        "$ref": "apod.json#"
+                    },
+                    {
+                        "required": [
+                            "date",
+                            "explanation",
+                            "hdurl",
+                            "media_type",
+                            "service_version",
+                            "title",
+                            "url"
+                        ]
+                    }
+                ]
+            });
+
+            expect(responseJSON.date).toBe(randomValidDate);
+            expect(responseJSON.media_type).toBe("image")
+        });
+
     }); // describe (Testing query parameter 'date')
 
     describe("Testing query parameter 'hd'", () => {
 
-        it("6. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
+        it("7. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=true`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -224,7 +256,6 @@ describe("Integration REST-API Testing APOD", () => {
                     },
                     {
                         "required": [
-                            "copyright",
                             "date",
                             "explanation",
                             "hdurl",
@@ -241,7 +272,7 @@ describe("Integration REST-API Testing APOD", () => {
             expect(responseJSON.media_type).toBe("image")
         });
 
-        it("7. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
+        it("8. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}?api_key=${defaults.apiKey}&hd=false`);
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -256,7 +287,6 @@ describe("Integration REST-API Testing APOD", () => {
                     },
                     {
                         "required": [
-                            "copyright",
                             "date",
                             "explanation",
                             "media_type",
@@ -276,7 +306,7 @@ describe("Integration REST-API Testing APOD", () => {
 
     describe("Testing parameter 'api_key'", () => {
 
-        it("8. Make GET request with query parameter 'api_key =' to endpoint apod", async () => {
+        it("9. Make GET request with query parameter 'api_key =' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
@@ -285,7 +315,7 @@ describe("Integration REST-API Testing APOD", () => {
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
 
-        it("9. Make GET request with query parameter 'api_key =' and 'hd=true' to endpoint apod", async () => {
+        it("10. Make GET request with query parameter 'api_key =' and 'hd=true' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}?hd=true`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
@@ -294,7 +324,7 @@ describe("Integration REST-API Testing APOD", () => {
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
 
-        it("10. Make GET request with query parameter 'api_key =' and 'hd=false' to endpoint apod", async () => {
+        it("11. Make GET request with query parameter 'api_key =' and 'hd=false' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}?hd=false`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
@@ -303,7 +333,7 @@ describe("Integration REST-API Testing APOD", () => {
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
 
-        it("11. Make GET request with query parameter 'api_key =' and 'date=currently' to endpoint apod", async () => {
+        it("12. Make GET request with query parameter 'api_key =' and 'date=currently' to endpoint apod", async () => {
             const response = await fetch(`${defaults.urlAPOD}?date=${currentlyDate}`);
             checkStatusCode.Status403(response.status);
             checkStatusText.statusTextForbidden(response.statusText);
@@ -311,6 +341,38 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
         });
-    })
+
+        it("13. Make GET request with query parameter 'api_key =' and 'date=' to endpoint apod", async () => {
+            const response = await fetch(`${defaults.urlAPOD}?date=`);
+            checkStatusCode.Status403(response.status);
+            checkStatusText.statusTextForbidden(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+        });
+
+        it("14. Make GET request with query parameter 'api_key =', 'date=' and 'hd=' to endpoint apod", async () => {
+            const response = await fetch(`${defaults.urlAPOD}?date=&hd=`);
+            checkStatusCode.Status403(response.status);
+            checkStatusText.statusTextForbidden(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+        });
+
+        it("15. Make GET request with query parameter 'api_key =' and 'hd=' to endpoint apod", async () => {
+            const response = await fetch(`${defaults.urlAPOD}?hd=`);
+            checkStatusCode.Status403(response.status);
+            checkStatusText.statusTextForbidden(response.statusText);
+            expect(response.headers.get('content-type')).toBe('application/json');
+            const responseJSON = await utils.transformResponseToJson(response);
+            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+        });
+
+    }) // describe (Testing parameter 'api_key')
+
+    describe("Testing query parameter: date, hd and date", () => {
+
+    }) // describe (Testing query parameter: date, hd and date)
 
 })
