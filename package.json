@@ -1,5 +1,5 @@
 {
-  "name": "rest-api-test-nasa",
+  "name": "testingapinasa",
   "version": "1.0.0",
   "description": "All what you need to test NASA API",
   "main": "index.js",
@@ -24,5 +24,13 @@
     "fetch": "^1.1.0",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SashaJson/Integration-Testing-REST-API-NASA.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SashaJson/Integration-Testing-REST-API-NASA/issues"
+  },
+  "homepage": "https://github.com/SashaJson/Integration-Testing-REST-API-NASA#readme"
 }
