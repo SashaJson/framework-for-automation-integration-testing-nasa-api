@@ -4,45 +4,55 @@
   "definitions": {
     "copyright": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "date": {
       "type": "string",
       "trim": true,
-      "format": "date"
+      "format": "date",
+      "minLength": 1
     },
     "explanation": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "hdurl": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "media_type": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "service_version": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "title": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "url": {
       "type": "string",
       "trim": true,
-      "format": "uri"
+      "format": "uri",
+      "minLength": 1
     },
     "code": {
       "type": "number",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     },
     "msg": {
       "type": "string",
-      "trim": true
+      "trim": true,
+      "minLength": 1
     }
   }
 }
