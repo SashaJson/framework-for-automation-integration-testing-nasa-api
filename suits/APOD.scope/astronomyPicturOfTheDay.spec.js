@@ -4,12 +4,12 @@ const fetch = require('node-fetch');
 const moment = require("moment");
 const util = require("util");
 const defaults = require("../../config/defaults");
-const utils = require("../../Libs/utils");
-const validate = require("../../Libs/ajvValidator");
-const checkStatusCode = require("../../Libs/checkStatusCode");
-const checkStatusText = require("../../Libs/checkStatusText");
-const missApiKey = require("../../Libs/funcApiKeyMissing");
-const ranValidDate = require("../../Libs/getRandomDate");
+const utils = require("../../libs/utils");
+const validate = require("../../libs/ajvValidator");
+const checkStatusCode = require("../../libs/checkStatusCode");
+const checkStatusText = require("../../libs/checkStatusText");
+const missApiKey = require("../../libs/funcApiKeyMissing");
+const ranValidDate = require("../../libs/getRandomDate");
 
 const dateFormat = "YYYY-MM-DD";
 const currentlyDate = utils.getCurrentlyDate();
@@ -51,7 +51,6 @@ describe("Integration REST-API Testing APOD", () => {
                         "required": [
                             "date",
                             "explanation",
-                            "hdurl",
                             "media_type",
                             "service_version",
                             "title",
@@ -188,7 +187,6 @@ describe("Integration REST-API Testing APOD", () => {
                         "required": [
                             "date",
                             "explanation",
-                            "hdurl",
                             "media_type",
                             "service_version",
                             "title",
