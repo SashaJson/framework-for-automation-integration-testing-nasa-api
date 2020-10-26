@@ -20,7 +20,7 @@ const INVALID_DATE = "1919-03-06";
 const MINIMAL_DATE = "1995-06-16";
 const MIN_DATE_MINUS_1 = "1995-06-15";
 const MAX_DATE_PLUS_1 = moment().add(1, "days").format(DATE_FORMAT);
-const randomValidDate = ranValidDate.randomValidDate();
+const randomValidDate = ranValidDate();
 
 let errMessInDate;
 
