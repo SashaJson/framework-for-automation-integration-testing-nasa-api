@@ -11,14 +11,14 @@ const checkStatusText = require("../../libs/checkStatusText");
 const missApiKey = require("../../libs/funcApiKeyMissing");
 const ranValidDate = require("../../libs/getRandomDate");
 
-const dateFormat = "YYYY-MM-DD";
-const currentlyDate = utils.getCurrentlyDate();
-const todaysDate = moment().format(dateFormat);
+const DATE_FORMAT = "YYYY-MM-DD";
+const CURRENTLY_DATE = utils.getCurrentlyDate();
+const TODAY_DATE = moment().format(DATE_FORMAT);
 
-const invalidDate = "1919-03-06";
-const minimalDate = "1995-06-16";
-const minDateMinus1 = "1995-06-15";
-const maxDatePlus1 = moment().add(1, "days").format(dateFormat);
+const INVALID_DATE = "1919-03-06";
+const MINIMAL_DATE = "1995-06-16";
+const MIN_DATE_MINUS_1 = "1995-06-15";
+const MAX_DATE_PLUS_1 = moment().add(1, "days").format(DATE_FORMAT);
 const randomValidDate = ranValidDate.randomValidDate();
 
 let errMessInDate;
@@ -61,7 +61,8 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(todaysDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
+
         });
 
         it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
@@ -92,7 +93,8 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
+
         });
 
         it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
@@ -128,7 +130,7 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(minimalDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
 
         });
 
@@ -162,7 +164,8 @@ describe("Integration REST-API Testing APOD", () => {
 
             expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
 
-            errMessInDate = responseJSON.msg.slice(0, 37)
+            errMessInDate = responseJSON.msg.slice(0, 37);
+
         });
 
         it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
@@ -197,7 +200,8 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(todaysDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
+
         });
 
         it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
@@ -229,7 +233,7 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`)
+            expect(responseJSON.msg).toBe(`${errMessInDate} ${currentlyDate.month} ${currentlyDate.day}, ${currentlyDate.years}.`);
 
         });
 
@@ -267,7 +271,8 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(randomValidDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
+
         });
 
     }); // describe (Testing query parameter 'date')
@@ -307,7 +312,8 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(todaysDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
+
         });
 
         it("8. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
@@ -343,8 +349,10 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(todaysDate);
-            expect(responseJSON.media_type).toBe("image")
+            expect(responseJSON.media_type).toBe("image");
+
         });
+
     }); // describe (Testing query parameter 'hd')
 
     describe("Testing parameter 'api_key'", () => {
@@ -361,6 +369,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("10. Make GET request with query parameter 'api_key =' and 'hd=true' to endpoint apod", async () => {
@@ -375,6 +384,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("11. Make GET request with query parameter 'api_key =' and 'hd=false' to endpoint apod", async () => {
@@ -389,6 +399,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("12. Make GET request with query parameter 'api_key =' and 'date=currently' to endpoint apod", async () => {
@@ -403,6 +414,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("13. Make GET request with query parameter 'api_key =' and 'date=' to endpoint apod", async () => {
@@ -417,6 +429,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("14. Make GET request with query parameter 'api_key =', 'date=' and 'hd=' to endpoint apod", async () => {
@@ -431,6 +444,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
         it("15. Make GET request with query parameter 'api_key =' and 'hd=' to endpoint apod", async () => {
@@ -445,6 +459,7 @@ describe("Integration REST-API Testing APOD", () => {
             const responseJSON = await utils.transformResponseToJson(response);
 
             validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+
         });
 
     }) // describe (Testing parameter 'api_key')
@@ -453,4 +468,4 @@ describe("Integration REST-API Testing APOD", () => {
 
     }) // describe (Testing query parameter: date, hd and date)
 
-})
+}); // describe (Integration REST-API Testing APOD)
