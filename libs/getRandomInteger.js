@@ -1,3 +1,3 @@
 "use strict";
 
-module.exports = { getRndInteger: (min, max) => Math.floor(Math.random() * (max - min)) + min }
+module.exports = (min, max) => Math.floor(Math.random() * (max - min)) + min
