@@ -1,6 +1,5 @@
 "use strict";
 
-const fetch = require('node-fetch');
 const moment = require("moment");
 const util = require("util");
 const defaults = require("../../config/defaults");
@@ -369,7 +368,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -384,7 +383,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -399,7 +398,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -414,7 +413,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -429,7 +428,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -444,7 +443,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
@@ -459,7 +458,7 @@ describe("Integration REST-API Testing APOD", () => {
 
             const responseJSON = await utils.transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey.returnJsonSchemaMissingApiKey());
+            validate.validationCheckJsonSchema(responseJSON, missApiKey());
 
         });
 
