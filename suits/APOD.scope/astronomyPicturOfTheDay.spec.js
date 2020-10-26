@@ -31,7 +31,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("0. Make GET request with default query parameter to endpoint apod and received correct date", async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -67,7 +67,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it(`1. Make GET request with query parameter 'date=${invalidDate}' to endpoint apod and expect 'Error'`, async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${invalidDate}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${invalidDate}`);
 
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
@@ -99,7 +99,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it(`2. Make GET request with query parameter minimal 'date=${minimalDate}' to endpoint apod`, async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${minimalDate}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${minimalDate}`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -136,7 +136,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it(`3. Make GET request with query parameter min date - 1 'date=${minDateMinus1}' to endpoint apod`, async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${minDateMinus1}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${minDateMinus1}`);
 
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
@@ -170,7 +170,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("4. Make GET request with query parameter max 'date=currently date' to endpoint apod", async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${todaysDate}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${todaysDate}`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -206,7 +206,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it(`5. Make GET request with query parameter max date + 1 'date=${maxDatePlus1}' to endpoint apod`, async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${maxDatePlus1}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${maxDatePlus1}`);
 
             checkStatusCode.Status400(response.status);
             checkStatusText.statusTextBadRequest(response.statusText);
@@ -239,7 +239,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it(`6. Make GET request with query parameter random valid date 'date=${randomValidDate}' to endpoint apod`, async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&date=${randomValidDate}`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${randomValidDate}`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -281,7 +281,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("7. Make GET request with query parameter 'hd = true' to endpoint apod", async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&hd=true`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&hd=true`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);
@@ -318,7 +318,7 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("8. Make GET request with query parameter 'hd = false' to endpoint apod", async () => {
 
-            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.apiKey}&hd=false`);
+            const response = await fetch(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&hd=false`);
 
             checkStatusCode.Status200(response.status);
             checkStatusText.statusTextOk(response.statusText);

@@ -3,7 +3,7 @@
 module.exports = {
 
     //---------------Configurations for API-NASA---------------
-    apiKey: "vidkL09R9ihkBAcesBGRgQtwiJkSfXQcToZi1aov",
+    API_KEY: "vidkL09R9ihkBAcesBGRgQtwiJkSfXQcToZi1aov",
     URL_APOD: "https://api.nasa.gov/planetary/apod",
     rateLimit: '2000',
 
