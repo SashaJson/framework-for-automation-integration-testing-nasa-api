@@ -24,14 +24,16 @@ const assertCode200TextOk = require('../../helpers/assertHeaders/assertCode200Te
     assertCode400TextBadRequest = require('../../helpers/assertHeaders/assertCode400TextBadRequest'),
     assertCode403TextForbidden = require('../../helpers/assertHeaders/assertCode403TextForbidden');
 
-const missApiKeyJsonModel = require('../../json-schemas/response-models/apiKeyMissing');
+const missApiKeyJsonModel = require('../../json-schemas/response-models/apiKeyMissing'),
+    defaultResultJsonModel = require('../../json-schemas/response-models/defaultResult');
+
 const randomValidDate = require('../../helpers/generation-random-data/getRandomDate');
 const request = require('../../helpers/requester');
 const validateJsonSchema = require('../../helpers/validation-json-schemas');
 
-const TODAY_DATE = moment().format(DATE_FORMAT);
-const RANDOM_DATE = randomValidDate();
-const MAX_DATE_PLUS_1 = moment().add(1, 'days').format(DATE_FORMAT);
+const TODAY_DATE = moment().format(DATE_FORMAT),
+    RANDOM_DATE = randomValidDate(),
+    MAX_DATE_PLUS_1 = moment().add(1, 'days').format(DATE_FORMAT);
 
 let errMessInDate;
 
@@ -52,24 +54,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let responseJSON = await transformResponseToJson(response);
 
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "date",
-                            "explanation",
-                            "media_type",
-                            "service_version",
-                            "title",
-                            "url"
-                        ]
-                    }
-                ]
-            });
+            validateJsonSchema(responseJSON, defaultResultJsonModel());
 
             expect(responseJSON.date).toBe(TODAY_DATE);
             expect(responseJSON.media_type).toBe(TYPE_IMAGE);
@@ -118,25 +103,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let responseJSON = await transformResponseToJson(response);
 
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "date",
-                            "explanation",
-                            "hdurl",
-                            "media_type",
-                            "service_version",
-                            "title",
-                            "url"
-                        ]
-                    }
-                ]
-            });
+            validateJsonSchema(responseJSON, defaultResultJsonModel());
 
             expect(responseJSON.date).toBe(MINIMAL_DATE);
             expect(responseJSON.media_type).toBe(TYPE_IMAGE);
@@ -187,24 +154,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let responseJSON = await transformResponseToJson(response);
 
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "date",
-                            "explanation",
-                            "media_type",
-                            "service_version",
-                            "title",
-                            "url"
-                        ]
-                    }
-                ]
-            });
+            validateJsonSchema(responseJSON, defaultResultJsonModel());
 
             expect(responseJSON.date).toBe(TODAY_DATE);
             expect(responseJSON.media_type).toBe(TYPE_IMAGE);
