@@ -1,9 +1,12 @@
-"use strict";
+'use strict';
 
 module.exports = () => {
+
     return {
         "type": "object",
-        "required": ["error"],
+        "required": [
+            "error"
+        ],
         "properties": {
             "error": {
                 "type": "object",
@@ -26,5 +29,6 @@ module.exports = () => {
                 }
             }
         }
-    }
+    };
+
 }
