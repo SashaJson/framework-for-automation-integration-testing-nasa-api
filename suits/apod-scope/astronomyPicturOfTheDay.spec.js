@@ -1,47 +1,67 @@
-"use strict";
+'use strict';
 
-const moment = require("moment");
-const util = require("util");
-const defaults = require("../../config/defaults");
-const utils = require("../../libs/utils");
-const validate = require("../../libs/ajvValidator");
-const checkStatusCode = require("../../libs/checkStatusCode");
-const checkStatusText = require("../../libs/checkStatusText");
-const missApiKey = require("../../libs/funcApiKeyMissing");
-const ranValidDate = require("../../libs/getRandomDate");
-const request = require('../../libs/makeRequest');
+const moment = require('moment');
 
-const DATE_FORMAT = "YYYY-MM-DD";
-const CURRENTLY_DATE = utils.getCurrentlyDate();
+const {
+    API_KEY,
+    URL_APOD,
+    CONTENT_TYPE,
+    DATE_FORMAT,
+    JEST_TIMEOUT,
+    RATE_LIMIT,
+    TYPE_IMAGE,
+    INVALID_DATE,
+    MINIMAL_DATE,
+    MIN_DATE_MINUS_1
+} = require('../../config/defaults');
+
+const {
+    transformResponseToJson,
+    getCurrentlyDate
+} = require('../../helpers/utils');
+
+const {
+    status200,
+    status400,
+    status403
+} = require('../../helpers/assertHeaders/checkStatusCode');
+
+const {
+    statusTextOk,
+    statusTextBadRequest,
+    statusTextForbidden
+} = require('../../helpers/assertHeaders/checkStatusText');
+
+const missApiKeyJsonModel = require('../../json-schemas/response-models/apiKeyMissing');
+const randomValidDate = require('../../helpers/generation-random-data/getRandomDate');
+const request = require('../../helpers/requester');
+const validateJsonSchema = require('../../helpers/validation-json-schemas');
+
 const TODAY_DATE = moment().format(DATE_FORMAT);
-
-const INVALID_DATE = "1919-03-06";
-const MINIMAL_DATE = "1995-06-16";
-const MIN_DATE_MINUS_1 = "1995-06-15";
-const MAX_DATE_PLUS_1 = moment().add(1, "days").format(DATE_FORMAT);
-const randomValidDate = ranValidDate();
+const RANDOM_DATE = randomValidDate();
+const MAX_DATE_PLUS_1 = moment().add(1, 'days').format(DATE_FORMAT);
 
 let errMessInDate;
 
-jest.setTimeout(defaults.jestTimeout); // it is necessary to increase timeout, because default timeout in Jest 5000ms
+jest.setTimeout(JEST_TIMEOUT); // it is necessary to increase timeout, because default timeout in Jest 5000ms
 
-describe("Integration REST-API Testing APOD", () => {
+describe('Integration REST-API Testing APOD', () => {
 
     describe("Testing query parameter 'date'", () => {
 
         it("0. Make GET request with default query parameter to endpoint APOD and received correct date", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -61,23 +81,23 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(TODAY_DATE);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
         it(`1. Make GET request with query parameter 'date=${INVALID_DATE}' to endpoint APOD and expect 'Error'`, async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${INVALID_DATE}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${INVALID_DATE}`);
 
-            checkStatusCode.Status400(response.status);
-            checkStatusText.statusTextBadRequest(response.statusText);
+            status400(response.status);
+            statusTextBadRequest(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -93,23 +113,23 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${CURRENTLY_DATE.month} ${CURRENTLY_DATE.day}, ${CURRENTLY_DATE.years}.`);
+            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
 
         });
 
         it(`2. Make GET request with query parameter minimal 'date=${MINIMAL_DATE}' to endpoint APOD`, async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${MINIMAL_DATE}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MINIMAL_DATE}`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -130,23 +150,23 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(MINIMAL_DATE);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
         it(`3. Make GET request with query parameter min date - 1 'date=${MIN_DATE_MINUS_1}' to endpoint APOD`, async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${MIN_DATE_MINUS_1}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MIN_DATE_MINUS_1}`);
 
-            checkStatusCode.Status400(response.status);
-            checkStatusText.statusTextBadRequest(response.statusText);
+            status400(response.status);
+            statusTextBadRequest(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -162,7 +182,7 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${CURRENTLY_DATE.month} ${CURRENTLY_DATE.day}, ${CURRENTLY_DATE.years}.`);
+            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
 
             errMessInDate = responseJSON.msg.slice(0, 37);
 
@@ -170,17 +190,17 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("4. Make GET request with query parameter max 'date=currently date' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${TODAY_DATE}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${TODAY_DATE}`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -200,23 +220,23 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(TODAY_DATE);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
         it(`5. Make GET request with query parameter max date + 1 'date=${MAX_DATE_PLUS_1}' to endpoint apod`, async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${MAX_DATE_PLUS_1}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MAX_DATE_PLUS_1}`);
 
-            checkStatusCode.Status400(response.status);
-            checkStatusText.statusTextBadRequest(response.statusText);
+            status400(response.status);
+            statusTextBadRequest(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
 
                 "allOf": [
@@ -233,23 +253,23 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.msg).toBe(`${errMessInDate} ${CURRENTLY_DATE.month} ${CURRENTLY_DATE.day}, ${CURRENTLY_DATE.years}.`);
+            expect(responseJSON.msg).toBe(`${errMessInDate} ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
 
         });
 
-        it(`6. Make GET request with query parameter random valid date 'date=${randomValidDate}' to endpoint APOD`, async () => {
+        it(`6. Make GET request with query parameter random valid date 'date=${RANDOM_DATE}' to endpoint APOD`, async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&date=${randomValidDate}`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${RANDOM_DATE}`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
 
                 "allOf": [
@@ -270,8 +290,8 @@ describe("Integration REST-API Testing APOD", () => {
                 ]
             });
 
-            expect(responseJSON.date).toBe(randomValidDate);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.date).toBe(RANDOM_DATE);
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
@@ -281,17 +301,17 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("7. Make GET request with query parameter 'hd = true' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&hd=true`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=true`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -312,23 +332,23 @@ describe("Integration REST-API Testing APOD", () => {
             });
 
             expect(responseJSON.date).toBe(TODAY_DATE);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
         it("8. Make GET request with query parameter 'hd = false' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?api_key=${defaults.API_KEY}&hd=false`);
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=false`);
 
-            checkStatusCode.Status200(response.status);
-            checkStatusText.statusTextOk(response.statusText);
+            status200(response.status);
+            statusTextOk(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(defaults.rateLimit);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
+            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, {
+            validateJsonSchema(responseJSON, {
                 "type": "object",
                 "allOf": [
                     {
@@ -343,13 +363,17 @@ describe("Integration REST-API Testing APOD", () => {
                             "title",
                             "url"
                         ],
-                        "not": {"required": ["hdurl"]}
+                        "not": {
+                            "required": [
+                                "hdurl"
+                            ]
+                        }
                     }
                 ]
             });
 
             expect(responseJSON.date).toBe(TODAY_DATE);
-            expect(responseJSON.media_type).toBe("image");
+            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
@@ -359,112 +383,114 @@ describe("Integration REST-API Testing APOD", () => {
 
         it("9. Make GET request with query parameter 'api_key =' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}`);
+            let response = await request(`${URL_APOD}`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("10. Make GET request with query parameter 'api_key =' and 'hd=true' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?hd=true`);
+            let response = await request(`${URL_APOD}?hd=true`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("11. Make GET request with query parameter 'api_key =' and 'hd=false' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?hd=false`);
+            let response = await request(`${URL_APOD}?hd=false`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("12. Make GET request with query parameter 'API_KEY =' and 'date=currently' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?date=${CURRENTLY_DATE}`);
+            let response = await request(`${URL_APOD}?date=${getCurrentlyDate()}`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("13. Make GET request with query parameter 'API_KEY=' and 'date=' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?date=`);
+            let response = await request(`${URL_APOD}?date=`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("14. Make GET request with query parameter 'API_KEY =', 'date=' and 'hd=' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?date=&hd=`);
+            let response = await request(`${URL_APOD}?date=&hd=`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
         it("15. Make GET request with query parameter 'API_KEY =' and 'hd=' to endpoint APOD", async () => {
 
-            const response = await request(`${defaults.URL_APOD}?hd=`);
+            let response = await request(`${URL_APOD}?hd=`);
 
-            checkStatusCode.Status403(response.status);
-            checkStatusText.statusTextForbidden(response.statusText);
+            status403(response.status);
+            statusTextForbidden(response.statusText);
 
-            expect(response.headers.get('content-type')).toBe(defaults.contentType);
+            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
-            const responseJSON = await utils.transformResponseToJson(response);
+            let responseJSON = await transformResponseToJson(response);
 
-            validate.validationCheckJsonSchema(responseJSON, missApiKey());
+            validateJsonSchema(responseJSON, missApiKeyJsonModel());
 
         });
 
     }); // describe (Testing parameter 'api_key')
 
-    describe("Testing query parameter: date, hd and date", () => {
+    // TODO TESTING QUERY PARAMETER
+
+    describe('Testing query parameter: date, hd and date', () => {
 
     }); // describe (Testing query parameter: date, hd and date)
 
