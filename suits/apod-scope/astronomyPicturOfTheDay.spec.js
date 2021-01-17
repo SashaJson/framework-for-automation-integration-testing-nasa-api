@@ -20,17 +20,9 @@ const {
     getCurrentlyDate
 } = require('../../helpers/utils');
 
-const {
-    status200,
-    status400,
-    status403
-} = require('../../helpers/assertHeaders/checkStatusCode');
-
-const {
-    statusTextOk,
-    statusTextBadRequest,
-    statusTextForbidden
-} = require('../../helpers/assertHeaders/checkStatusText');
+const assertCode200TextOk = require('../../helpers/assertHeaders/assertCode200TextOk'),
+    assertCode400TextBadRequest = require('../../helpers/assertHeaders/assertCode400TextBadRequest'),
+    assertCode403TextForbidden = require('../../helpers/assertHeaders/assertCode403TextForbidden');
 
 const missApiKeyJsonModel = require('../../json-schemas/response-models/apiKeyMissing');
 const randomValidDate = require('../../helpers/generation-random-data/getRandomDate');
@@ -53,8 +45,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -89,8 +80,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${INVALID_DATE}`);
 
-            status400(response.status);
-            statusTextBadRequest(response.statusText);
+            assertCode400TextBadRequest(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -121,8 +111,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MINIMAL_DATE}`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -158,8 +147,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MIN_DATE_MINUS_1}`);
 
-            status400(response.status);
-            statusTextBadRequest(response.statusText);
+            assertCode400TextBadRequest(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -192,8 +180,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${TODAY_DATE}`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -228,8 +215,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MAX_DATE_PLUS_1}`);
 
-            status400(response.status);
-            statusTextBadRequest(response.statusText);
+            assertCode400TextBadRequest(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -261,8 +247,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${RANDOM_DATE}`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -303,8 +288,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=true`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -340,8 +324,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=false`);
 
-            status200(response.status);
-            statusTextOk(response.statusText);
+            assertCode200TextOk(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
             expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
@@ -385,8 +368,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -400,8 +382,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?hd=true`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -415,8 +396,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?hd=false`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -430,8 +410,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?date=${getCurrentlyDate()}`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -445,8 +424,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?date=`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -460,8 +438,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?date=&hd=`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
@@ -475,8 +452,7 @@ describe('Integration REST-API Testing APOD', () => {
 
             let response = await request(`${URL_APOD}?hd=`);
 
-            status403(response.status);
-            statusTextForbidden(response.statusText);
+            assertCode403TextForbidden(response.status, response.statusText);
 
             expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
 
