@@ -1,18 +1,23 @@
-"use strict";
+'use strict';
 
 module.exports = {
 
     statusTextOk: statusText => {
-        if (statusText !== 'OK') throw new Error("Ошибка HTTP: " + statusText);
+
+        if (statusText !== 'OK') throw new Error('Error HTTP: ' + statusText);
 
     },
 
     statusTextBadRequest: statusText => {
-        if ( statusText !== 'BAD REQUEST') throw new Error("Ошибка HTTP: " + statusText);
+
+        if ( statusText !== 'BAD REQUEST') throw new Error('Error HTTP: ' + statusText);
+
     },
 
     statusTextForbidden: statusText => {
-        if ( statusText !== 'Forbidden') throw new Error("Ошибка HTTP: " + statusText);
+
+        if ( statusText !== 'Forbidden') throw new Error('Error HTTP: ' + statusText);
+
     }
 
 }

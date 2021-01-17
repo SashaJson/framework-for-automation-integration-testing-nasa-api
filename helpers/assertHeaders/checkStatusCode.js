@@ -1,26 +1,29 @@
-"use strict";
+'use strict';
 
 module.exports = {
 
-    Status200: statusCode => {
+    status200: statusCode => {
 
         if (statusCode !== 200) {
-            throw new Error("Ошибка HTTP: " + statusCode);
+            throw new Error('Error HTTP: ' + statusCode);
         }
+
     },
 
-    Status400: statusCode => {
+    status400: statusCode => {
 
         if (statusCode !== 400) {
-            throw new Error("Ошибка HTTP: " + statusCode);
+            throw new Error('Error HTTP: ' + statusCode);
         }
+
     },
 
-    Status403: statusCode => {
+    status403: statusCode => {
 
         if (statusCode !== 403) {
-            throw new Error("Ошибка HTTP: " + statusCode);
+            throw new Error('Error HTTP: ' + statusCode);
         }
-    },
+
+    }
 
 }
