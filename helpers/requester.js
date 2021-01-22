@@ -23,6 +23,14 @@ module.exports = async (url, method = 'GET', data = null) => {
             body
         });
 
+        console.log('Data when make request: ' + Date());
+
+        for (let [key, value] of response.headers) {
+            console.log(`Headers: ${key} = ${value}`);
+        }
+
+        console.log(`HTTP-cod response: ${response.status}`);
+
         return await response;
 
     } catch (error) {

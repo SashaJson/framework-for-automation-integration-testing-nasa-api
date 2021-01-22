@@ -72,35 +72,35 @@ module.exports = {
         switch (method) {
 
             case 'GET':
-                console.log(util.inspect(`curl --request ${method} '${url}'`, {
+                console.log(util.inspect(`curl --request ${method} ${url}`, {
                     showHidden: false,
                     depth: null
                 }));
                 break;
 
             case 'POST':
-                console.log(util.inspect(`curl --request ${method} '${url}' --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
+                console.log(util.inspect(`curl --request ${method} ${url} --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
                     showHidden: false,
                     depth: null
                 }));
                 break;
 
             case 'PUT':
-                console.log(util.inspect(`curl --request ${method} '${url}' --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
+                console.log(util.inspect(`curl --request ${method} ${url} --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
                     showHidden: false,
                     depth: null
                 }));
                 break;
 
             case 'DELETE':
-                console.log(util.inspect(`curl --request ${method} '${url}' --data-raw ''`, {
+                console.log(util.inspect(`curl --request ${method} ${url} --data-raw ''`, {
                     showHidden: false,
                     depth: null
                 }));
                 break;
 
             default:
-                throw new Error('Method undefine');
+                throw new Error('Http method undefine');
         }
 
     }
