@@ -5,4 +5,7 @@ const {statusTextBadRequest} = require('./checkStatusText');
 
 module.exports = (statusCode, statusText) => {
 
+    status400(statusCode);
+    statusTextBadRequest(statusText);
+
 }
