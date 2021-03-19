@@ -28,5 +28,6 @@ module.exports = {
 
     //--------------Type Images--------------------------
 
-    TYPE_IMAGE: 'image'
+    TYPE_IMAGE: 'image',
+
 }

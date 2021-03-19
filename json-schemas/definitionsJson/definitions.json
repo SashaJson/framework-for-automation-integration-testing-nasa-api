@@ -3,56 +3,37 @@
   "$id": "definitions.json",
   "definitions": {
     "copyright": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     },
     "date": {
       "type": "string",
-      "trim": true,
-      "format": "date",
-      "minLength": 1
+      "pattern": "(\\d{4})-(\\d{2})-(\\d{2})"
     },
     "explanation": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     },
     "hdurl": {
       "type": "string",
-      "trim": true,
-      "minLength": 1
+      "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$"
     },
     "media_type": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     },
     "service_version": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     },
     "title": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     },
     "url": {
       "type": "string",
-      "trim": true,
-      "format": "uri",
-      "minLength": 1
+      "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$"
     },
     "code": {
-      "type": "number",
-      "trim": true,
-      "minLength": 1
+      "type": "number"
     },
     "msg": {
-      "type": "string",
-      "trim": true,
-      "minLength": 1
+      "type": "string"
     }
   }
 }
