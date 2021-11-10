@@ -1,22 +1,19 @@
 {
-  "name": "testingapinasa",
+  "name": "framework-automation-testing",
   "version": "1.0.0",
   "description": "Automation testing REST API NASA",
-  "main": "index.js",
   "scripts": {
     "test": "jest -i --verbose"
   },
   "keywords": [
-    "REST-API",
-    "Jest",
-    "Integration Test",
-    "QA Automation",
-    "Automation testing"
+    "REST-API NASA",
+    "Automation testing API NASA"
   ],
   "author": "Alexander Shulha (sashamiller666@gmail.com)",
   "license": "ISC",
   "devDependencies": {
     "ajv": "^7.2.1",
+    "dotenv": "^10.0.0",
     "jest": "^26.6.3",
     "moment": "^2.29.1"
   },

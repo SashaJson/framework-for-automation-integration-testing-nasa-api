@@ -2,18 +2,7 @@
 
 const moment = require('moment');
 
-const {
-    API_KEY,
-    URL_APOD,
-    CONTENT_TYPE,
-    DATE_FORMAT,
-    JEST_TIMEOUT,
-    RATE_LIMIT,
-    TYPE_IMAGE,
-    INVALID_DATE,
-    MINIMAL_DATE,
-    MIN_DATE_MINUS_1
-} = require('../../config/defaults');
+const defaults = require('../../static-data/defaults');
 
 const {
     transformResponseToJson,
@@ -32,8 +21,6 @@ const TODAY_DATE = moment().format(DATE_FORMAT),
     MAX_DATE_PLUS_1 = moment().add(1, 'days').format(DATE_FORMAT);
 
 let errMessInDate;
-
-jest.setTimeout(JEST_TIMEOUT); // it is necessary to increase timeout, because default timeout in Jest 5000ms
 
 describe('Integration REST-API Testing APOD', () => {
 
