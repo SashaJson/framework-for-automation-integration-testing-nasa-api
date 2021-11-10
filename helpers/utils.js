@@ -1,31 +1,14 @@
 'use strict';
 
-const util = require('util');
-
 module.exports = {
-
-    transformResponseToJson: async response => {
-
-        let responseJson = await response.json();
-
-        console.log(util.inspect(responseJson, {
-            showHidden: true,
-            depth: null,
-            compact: false,
-            maxArrayLength: null
-        }));
-
-        return responseJson;
-
-    },
 
     getCurrentlyDate: () => {
 
-        let currentlyDateFullFormat = new Date();
+        const currentlyDateFullFormat = new Date();
 
-        let years = currentlyDateFullFormat.getFullYear();
+        const years = currentlyDateFullFormat.getFullYear();
         let month = currentlyDateFullFormat.getMonth();
-        let day = currentlyDateFullFormat.getDate();
+        const day = currentlyDateFullFormat.getDate();
 
         month = {
 
@@ -50,55 +33,6 @@ module.exports = {
             day: day
         };
 
-    },
-
-    checkAllResponse: res => {
-
-        console.log(util.inspect(res, {
-            showHidden: true,
-            depth: null,
-            compact: false,
-            maxArrayLength: null
-        }));
-
-    },
-
-    getCurlRequest: (
-        url,
-        method,
-        data
-    ) => {
-
-        let curlRequest = {
-            'GET': () => {
-                console.log(util.inspect(`curl --request ${method} ${url}`, {
-                    showHidden: false,
-                    depth: null
-                }));
-            },
-
-            'POST': () => {
-                console.log(util.inspect(`curl --request ${method} ${url} --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
-                    showHidden: false,
-                    depth: null
-                }));
-            },
-
-            'PUT': () => {
-                console.log(util.inspect(`curl --request ${method} ${url} --header 'Content-Type: application/json' --data-raw '${JSON.stringify(data)}'`, {
-                    showHidden: false,
-                    depth: null
-                }));
-            },
-
-            'DELETE': () => {
-                console.log(util.inspect(`curl --request ${method} ${url} --data-raw ''`, {
-                    showHidden: false,
-                    depth: null
-                }));
-            },
-
-        }[method]();
-
     }
+
 }
