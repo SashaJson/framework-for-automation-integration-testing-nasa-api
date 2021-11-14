@@ -15,3 +15,5 @@ function getRandomDate() {
 
     return moment(`${ validYear }-${ validMouth }-${ validDate }`).format(DATE_FORMAT);
 }
+
+module.exports = { getRandomDate }
