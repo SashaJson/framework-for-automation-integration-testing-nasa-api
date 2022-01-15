@@ -7,11 +7,13 @@ const r = require('../helpers/requester');
 
 module.exports = {
 
-    async getAstronomyPictureDay(expectResponseError = false) {
+    async getAstronomyPictureDay(queryParams = {}, expectResponseError = [false]) {
 
-        const responseBody = await r.get(`${APOD_URL}?api_key=${process.env.API_KEY}`);
+        queryParams.api_key = process.env.API_KEY;
 
-        verificationResponseWithJsonModel(responseBody, expectResponseError);
+        const responseBody = await r.get(`${APOD_URL}?` + new URLSearchParams(queryParams));
+
+        verificationResponseWithJsonModel(expectResponseError, responseBody);
 
         return responseBody;
 
