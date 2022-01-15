@@ -20,7 +20,8 @@
       "type": "string"
     },
     "service_version": {
-      "type": "string"
+      "type": "string",
+      "const": "v1"
     },
     "title": {
       "type": "string"
