@@ -10,6 +10,7 @@ const { getCurrentlyDate } = require('../../helpers/utils');
 const { getAstronomyPictureDay } = require('../../api/astronomyPictureDay');
 
 const TODAY_DATE = moment().format(defaults.DATE_FORMAT),
+    INVALID_DATE = '1991-12-12',
     RANDOM_DATE = getRandomDate(),
     MAX_DATE_PLUS_1 = moment().add(1, 'days').format(defaults.DATE_FORMAT);
 
@@ -29,34 +30,15 @@ describe('Integration REST-API Testing APOD', () => {
 
         });
 
-        xit(`1. Make GET request with query parameter 'date=${INVALID_DATE}' to endpoint APOD and expect 'Error'`, async () => {
+        it(`1. Make GET request with query parameter 'date=${INVALID_DATE}' to endpoint APOD and expect 'Error'`, async () => {
 
-            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${INVALID_DATE}`);
+            const dataError = await getAstronomyPictureDay(
+                { date: INVALID_DATE },
+                [true, 'invalidParam']
+            );
 
-            expect(response.status).toBe(400);
-            expect(response.statusText).toBe('BAD REQUEST');
-            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
-
-            let responseJSON = await transformResponseToJson(response);
-
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "code",
-                            "msg",
-                            "service_version"
-                        ]
-                    }
-                ]
-            });
-
-            expect(responseJSON.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
+            expect(dataError.code).toBe(400);
+            expect(dataError.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
 
         });
 
