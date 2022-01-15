@@ -30,7 +30,7 @@ function handleResponse(response) {
 
     console.log(`HTTP-cod response: ${ response.status }`);
 
-    if (!response.ok) {
+    if (response.status >= 500) {
         console.error(`Server return HTTP-cod: ${ response.status }`);
         return response.text();
     } else {
