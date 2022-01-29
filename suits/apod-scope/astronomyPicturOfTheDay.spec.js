@@ -14,7 +14,7 @@ const TODAY_DATE = moment().format(defaults.DATE_FORMAT),
     MINIMAL_DATE = '1995-06-16',
     MINIMAL_DATE_MINUS_1_DAY = '1995-06-15',
     RANDOM_DATE = getRandomDate(),
-    MAX_DATE_PLUS_1 = moment().add(1, 'days').format(defaults.DATE_FORMAT);
+    MAX_DATE_PLUS_1_DAY = moment().add(1, 'days').format(defaults.DATE_FORMAT);
 
 let errMessInDate;
 
@@ -74,9 +74,19 @@ describe('Integration REST-API Testing APOD', () => {
 
         });
 
-        xit(`5. Make GET request with query parameter max date + 1 'date=${MAX_DATE_PLUS_1}' to endpoint apod`, async () => {
+        it(`5. Make GET request with query parameter random valid date 'date=${RANDOM_DATE}' to endpoint APOD`, async () => {
 
-            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MAX_DATE_PLUS_1}`);
+            const dataAstronomyDay = await getAstronomyPictureDay({ date: RANDOM_DATE });
+
+            expect(dataAstronomyDay.date).toBe(RANDOM_DATE);
+            expect(dataAstronomyDay.media_type).toBe('image');
+            expect(dataAstronomyDay.service_version).toBe('v1');
+
+        });
+
+        xit(`5. Make GET request with query parameter max date + 1 'date=${MAX_DATE_PLUS_1_DAY}' to endpoint apod`, async () => {
+
+            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MAX_DATE_PLUS_1_DAY}`);
 
             expect(response.status).toBe(400);
             expect(response.statusText).toBe('BAD REQUEST');
@@ -103,43 +113,6 @@ describe('Integration REST-API Testing APOD', () => {
             });
 
             expect(responseJSON.msg).toBe(`${errMessInDate} ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
-
-        });
-
-        xit(`6. Make GET request with query parameter random valid date 'date=${RANDOM_DATE}' to endpoint APOD`, async () => {
-
-            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${RANDOM_DATE}`);
-
-            expect(response.status).toBe(200);
-            expect(response.statusText).toBe('OK');
-            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
-
-            let responseJSON = await transformResponseToJson(response);
-
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "date",
-                            "explanation",
-                            "hdurl",
-                            "media_type",
-                            "service_version",
-                            "title",
-                            "url"
-                        ]
-                    }
-                ]
-            });
-
-            expect(responseJSON.date).toBe(RANDOM_DATE);
-            expect(responseJSON.media_type).toBe(TYPE_IMAGE);
 
         });
 
