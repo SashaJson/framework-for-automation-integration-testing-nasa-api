@@ -9,7 +9,7 @@ function getRandomInteger(min, max) {
 
 function getRandomDate() {
 
-    const validYear = getRandomInteger(1996, 2020);
+    const validYear = getRandomInteger(1996, 2022);
     const validMouth = getRandomInteger(0, 11);
     const validDate = getRandomInteger(1, 31);
 
