@@ -84,35 +84,12 @@ describe('Integration REST-API Testing APOD', () => {
 
         });
 
-        xit(`5. Make GET request with query parameter max date + 1 'date=${MAX_DATE_PLUS_1_DAY}' to endpoint apod`, async () => {
+        it(`6. Make GET request with query parameter max date + 1 'date=${MAX_DATE_PLUS_1_DAY}' to endpoint apod`, async () => {
 
-            let response = await request(`${URL_APOD}?api_key=${API_KEY}&date=${MAX_DATE_PLUS_1_DAY}`);
+            const dataError = await getAstronomyPictureDay({ date: MAX_DATE_PLUS_1_DAY }, 'invalidParam');
 
-            expect(response.status).toBe(400);
-            expect(response.statusText).toBe('BAD REQUEST');
-            expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
-            expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
-
-            let responseJSON = await transformResponseToJson(response);
-
-            validateJsonSchema(responseJSON, {
-                "type": "object",
-
-                "allOf": [
-                    {
-                        "$ref": "apod.json#"
-                    },
-                    {
-                        "required": [
-                            "code",
-                            "msg",
-                            "service_version"
-                        ]
-                    }
-                ]
-            });
-
-            expect(responseJSON.msg).toBe(`${errMessInDate} ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
+            expect(dataError.code).toBe(400);
+            expect(dataError.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);
 
         });
 
@@ -197,9 +174,5 @@ describe('Integration REST-API Testing APOD', () => {
     //     });
     //
     // }); // describe (Testing query parameter 'hd')
-
-    describe('Testing query parameter: date, hd and date', () => {
-
-    }); // describe (Testing query parameter: date, hd and date)
 
 }); // describe (Integration REST-API Testing APOD)
