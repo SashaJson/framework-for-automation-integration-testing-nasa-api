@@ -7,7 +7,7 @@ const r = require('../helpers/requester');
 
 module.exports = {
 
-    async getAstronomyPictureDay(queryParams = {}, expectResponseError = [false]) {
+    async getAstronomyPictureDay(queryParams = {}, expectResponseError = false) {
 
         queryParams.api_key = process.env.API_KEY;
 

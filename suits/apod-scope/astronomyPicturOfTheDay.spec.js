@@ -32,10 +32,7 @@ describe('Integration REST-API Testing APOD', () => {
 
         it(`1. Make GET request with query parameter 'date=${INVALID_DATE}' to endpoint APOD and expect 'Error'`, async () => {
 
-            const dataError = await getAstronomyPictureDay(
-                { date: INVALID_DATE },
-                [true, 'invalidParam']
-            );
+            const dataError = await getAstronomyPictureDay({ date: INVALID_DATE }, 'invalidParam');
 
             expect(dataError.code).toBe(400);
             expect(dataError.msg).toBe(`Date must be between Jun 16, 1995 and ${getCurrentlyDate().month} ${getCurrentlyDate().day}, ${getCurrentlyDate().years}.`);

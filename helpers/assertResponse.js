@@ -7,13 +7,13 @@ const apiKeyMissingJsonModel = require('../json-schemas/response-models/apiKeyMi
 const validateJsonSchema = require('../helpers/validation-json-schemas');
 
 function verificationResponseWithJsonModel(expectError, responseBody, jsonSchema = defaultJsonModel()) {
-    if (expectError.includes(false)) {
+    if (!expectError) {
         validateJsonSchema(responseBody, jsonSchema);
     } else {
         ({
             'invalidParam': () => validateJsonSchema(responseBody, invalidParameterJsonModel()),
             'apiKeyMiss': () => validateJsonSchema(responseBody, apiKeyMissingJsonModel())
-        })[expectError[1]]();
+        })[expectError]();
 
     }
 }
