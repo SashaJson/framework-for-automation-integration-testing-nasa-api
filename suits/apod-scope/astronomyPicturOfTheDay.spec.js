@@ -16,8 +16,6 @@ const TODAY_DATE = moment().format(defaults.DATE_FORMAT),
     RANDOM_DATE = getRandomDate(),
     MAX_DATE_PLUS_1_DAY = moment().add(1, 'days').format(defaults.DATE_FORMAT);
 
-let errMessInDate;
-
 describe('Integration REST-API Testing APOD', () => {
 
     describe("Testing query parameter 'date'", () => {
@@ -94,85 +92,5 @@ describe('Integration REST-API Testing APOD', () => {
         });
 
     }); // describe (Testing query parameter 'date')
-
-    // describe("Testing query parameter 'hd'", () => {
-    //
-    //     it("7. Make GET request with query parameter 'hd = true' to endpoint APOD", async () => {
-    //
-    //         let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=true`);
-    //
-    //         expect(response.status).toBe(200);
-    //         expect(response.statusText).toBe('OK');
-    //         expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
-    //         expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
-    //
-    //         let responseJSON = await transformResponseToJson(response);
-    //
-    //         validateJsonSchema(responseJSON, {
-    //             "type": "object",
-    //             "allOf": [
-    //                 {
-    //                     "$ref": "apod.json#"
-    //                 },
-    //                 {
-    //                     "required": [
-    //                         "date",
-    //                         "explanation",
-    //                         "hdurl",
-    //                         "media_type",
-    //                         "service_version",
-    //                         "title",
-    //                         "url"
-    //                     ]
-    //                 }
-    //             ]
-    //         });
-    //
-    //         expect(responseJSON.date).toBe(TODAY_DATE);
-    //         expect(responseJSON.media_type).toBe(TYPE_IMAGE);
-    //
-    //     });
-    //
-    //     it("8. Make GET request with query parameter 'hd = false' to endpoint APOD", async () => {
-    //
-    //         let response = await request(`${URL_APOD}?api_key=${API_KEY}&hd=false`);
-    //
-    //         expect(response.status).toBe(200);
-    //         expect(response.statusText).toBe('OK');
-    //         expect(response.headers.get('content-type')).toBe(CONTENT_TYPE);
-    //         expect(response.headers.get('x-ratelimit-limit')).toBe(RATE_LIMIT);
-    //
-    //         let responseJSON = await transformResponseToJson(response);
-    //
-    //         validateJsonSchema(responseJSON, {
-    //             "type": "object",
-    //             "allOf": [
-    //                 {
-    //                     "$ref": "apod.json#"
-    //                 },
-    //                 {
-    //                     "required": [
-    //                         "date",
-    //                         "explanation",
-    //                         "media_type",
-    //                         "service_version",
-    //                         "title",
-    //                         "url"
-    //                     ],
-    //                     "not": {
-    //                         "required": [
-    //                             "hdurl"
-    //                         ]
-    //                     }
-    //                 }
-    //             ]
-    //         });
-    //
-    //         expect(responseJSON.date).toBe(TODAY_DATE);
-    //         expect(responseJSON.media_type).toBe(TYPE_IMAGE);
-    //
-    //     });
-    //
-    // }); // describe (Testing query parameter 'hd')
 
 }); // describe (Integration REST-API Testing APOD)
